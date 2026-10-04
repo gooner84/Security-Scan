@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Scan</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#171717;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:22px}
+.card{width:min(520px,100%);background:white;border-radius:18px;padding:28px;box-shadow:0 12px 35px #0002;text-align:center}
+.icon{font-size:64px}.warning{color:#c40000}.bar{height:14px;background:#e5e5e5;border-radius:99px;overflow:hidden;margin:24px 0}
+.fill{height:100%;width:0;background:#c40000;transition:width .22s ease}
+h1{margin:8px 0;font-size:30px}#status{font-size:18px}#threats{font-weight:700;font-size:22px}
+.small{color:#666;font-size:14px;margin-top:20px}
+</style>
+</head>
+<body>
+<main class="card">
+<div class="icon">⚠️</div>
+<h1 class="warning">Security Alert</h1>
+<p id="status">Scanning device…</p>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<p id="threats">Threats detected: 0</p>
+<p class="small" id="note">Checking system security…</p>
+</main>
+<script>
+let p=0,t=0;
+const fill=document.querySelector("#fill");
+const status=document.querySelector("#status");
+const timer=setInterval(()=>{
+ p=Math.min(100,p+Math.floor(Math.random()*5)+1);
+ fill.style.width=p+"%";
+ status.textContent="Scanning device… "+p+"%";
+ if(Math.random()>.55 && t<7)t++;
+ document.querySelector("#threats").textContent="Threats detected: "+t;
+ if(p>=100){
+  clearInterval(timer);
+  document.querySelector("#status").textContent="Scan complete";
+  document.querySelector("#threats").textContent="😂 PRANK!";
+  document.querySelector("#note").textContent="No viruses were detected. This page is only a harmless joke.";
+ }
+},250);
+</script>
+</body>
+</html>
