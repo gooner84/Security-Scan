@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Alert</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#030405;color:#e9edf2;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden}
+body.alarm{animation:bg .32s infinite alternate}@keyframes bg{to{background:#290000}}
+.panel{width:100%;max-width:470px;background:#080b0f;border:1px solid #343b44;border-radius:12px;overflow:hidden;box-shadow:0 25px 90px #000}
+.header{display:flex;align-items:center;justify-content:space-between;background:#11161c;border-bottom:1px solid #303741;padding:11px 14px;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#a6b0bc}
+.lights span{display:inline-block;width:9px;height:9px;border-radius:50%;background:#505966;margin-right:5px}.lights span:first-child{background:#ff554c}
+.screen{padding:25px 20px;text-align:center}.hide{display:none}.icon{font-size:58px;margin:5px 0 12px}h1{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:31px;line-height:1.08;margin:8px 0 12px}.red{color:#ff4d44;text-shadow:0 0 18px #ff3b3044}p{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#9da8b6;line-height:1.5}
+button{width:100%;min-height:54px;margin-top:19px;border:0;border-radius:8px;background:#e63830;color:#fff;font-weight:850;font-size:15px}.darkbtn{background:#e8ebef;color:#090b0e}
+.bar{height:12px;border:1px solid #3b434e;background:#151a20;margin:22px 0 10px;overflow:hidden}.fill{height:100%;width:0;background:#e63830;transition:.09s}
+.percent{font-size:27px;font-weight:bold}.terminal{text-align:left;background:#020304;border:1px solid #252b32;padding:12px;margin-top:17px;min-height:112px;color:#7e8996;font-size:11px;line-height:1.65;white-space:pre-line}.terminal .bad{color:#ff5148}
+.glitch{animation:glitch .12s 8}@keyframes glitch{25%{transform:translateX(-3px)}50%{filter:contrast(1.8)}75%{transform:translateX(3px)}}
+.safe{color:#68d391}
+</style></head><body id="body">
+<main class="panel" id="panel"><div class="header"><span>SECURITY SERVICE</span><span class="lights"><span></span><span></span><span></span></span></div>
+
+<section class="screen" id="s1"><div class="icon">🚨</div><h1 class="red">YOU HAVE A VIRUS</h1><p>A simulated high-risk threat has been detected.</p><button id="remove">CLICK HERE TO REMOVE IT</button></section>
+
+<section class="screen hide" id="s2"><div class="icon">⚠️</div><h1>REMOVING THREAT...</h1><div class="bar"><div class="fill" id="fill"></div></div><div class="percent" id="pct">0%</div><div class="terminal" id="term">[SCAN] Starting cleanup engine...</div></section>
+
+<section class="screen hide" id="s3"><div class="icon">⛔</div><h1 class="red">REMOVAL INTERRUPTED</h1><p>The simulated threat could not be isolated.</p><div class="terminal"><span class="bad">[ERROR] Threat process still active
+[ERROR] Cleanup request rejected
+[WARN]  Security status: CRITICAL</span></div><button class="darkbtn" id="force">FORCE REMOVE THREAT</button></section>
+
+<section class="screen hide" id="s4"><div class="icon">🧩</div><h1>REPAIRING SYSTEM...</h1><p>Running a simulated recovery sequence.</p><div class="terminal" id="repair">[RECOVERY] Checking files...</div></section>
+
+<section class="screen hide" id="s5"><div class="icon">🚨</div><h1 class="red">CRITICAL SECURITY ALERT</h1><p>Simulated recovery failed.</p><div class="terminal"><span class="bad">[FAILED] Recovery incomplete
+[FAILED] Threat removal unsuccessful
+[ALERT] YOU HAVE A VIRUS</span></div><button id="last">RUN EMERGENCY CHECK</button></section>
+
+<section class="screen hide" id="s6"><div class="icon">🔍</div><h1>EMERGENCY CHECK</h1><div class="percent" id="count">3</div><p>Verifying security status...</p></section>
+
+<section class="screen hide" id="s7"><div class="icon">😂</div><h1 class="safe">THERE WAS NO VIRUS</h1><p>Your device is completely safe. This page was only a joke simulation. It did not download anything, collect information, modify files, or perform a real security scan.</p></section>
+</main>
+<script>
+const $=x=>document.getElementById(x), screens=["s1","s2","s3","s4","s5","s6","s7"];let ctx,o,g,siren;
+function show(x){screens.forEach(i=>$(i).classList.add("hide"));$(x).classList.remove("hide")}
+function prep(){if(!ctx){const A=window.AudioContext||window.webkitAudioContext;if(A)ctx=new A()}if(ctx&&ctx.state==="suspended")ctx.resume()}
+function alarm(){if(!ctx)return;g=ctx.createGain();g.gain.value=.045;g.connect(ctx.destination);o=ctx.createOscillator();o.type="sawtooth";o.connect(g);o.start();let h=0;siren=setInterval(()=>{h=!h;o.frequency.setValueAtTime(h?1120:570,ctx.currentTime)},260);body.classList.add("alarm")}
+function stop(){clearInterval(siren);if(o){try{o.stop()}catch(e){}o=null}body.classList.remove("alarm")}
+remove.onclick=()=>{prep();show("s2");let p=0,t=setInterval(()=>{p=Math.min(100,p+3);fill.style.width=p+"%";pct.textContent=p+"%";if(p===21)term.textContent+="\n[SCAN] Inspecting simulated threat...";if(p===48)term.textContent+="\n[CLEAN] Attempting isolation...";if(p===72)term.textContent+="\n[WARN] Threat process responding...";if(p===90)term.textContent+="\n[ERROR] Removal operation unstable...";if(p===100){clearInterval(t);setTimeout(()=>{show("s3");panel.classList.add("glitch");alarm()},350)}},80)}
+force.onclick=()=>{stop();panel.classList.remove("glitch");show("s4");let lines=["[RECOVERY] Checking files...","[RECOVERY] Restoring security state...","[RECOVERY] Verifying simulated system data...","[WARN] Unexpected response detected...","[ERROR] Recovery could not complete."];let i=0;repair.textContent=lines[0];let t=setInterval(()=>{i++;if(i<lines.length)repair.textContent+="\n"+lines[i];else{clearInterval(t);setTimeout(()=>{show("s5");alarm()},500)}},550)}
+last.onclick=()=>{stop();show("s6");let n=3;count.textContent=n;let t=setInterval(()=>{n--;count.textContent=n;if(n===0){clearInterval(t);setTimeout(()=>show("s7"),500)}},750)}
+</script></body></html>
