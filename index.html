@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Alert</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07090d;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:430px;background:#11161d;border:1px solid #343b45;border-radius:20px;padding:30px;text-align:center;box-shadow:0 20px 70px #0009}
+.icon{font-size:68px}h1{font-size:34px;line-height:1.15;margin:15px 0}.red{color:#ff453a}p{color:#b5bdc9;line-height:1.5}
+button{width:100%;border:0;border-radius:13px;padding:17px;margin-top:18px;background:#ff3b30;color:#fff;font-size:18px;font-weight:800}
+.hide{display:none}.bar{height:17px;background:#292f38;border-radius:20px;overflow:hidden;margin:22px 0}.fill{height:100%;width:0;background:#ff453a;transition:.1s}.pct{font-size:32px;font-weight:bold}
+.flash{animation:flash .4s infinite alternate}@keyframes flash{to{background:#310000}}
+</style></head>
+<body id="body">
+<div class="card" id="warning"><div class="icon">🚨</div><h1 class="red">YOU HAVE A VIRUS</h1><p>A security threat has been detected.</p><button id="remove">CLICK HERE TO REMOVE IT</button></div>
+<div class="card hide" id="removing"><div class="icon">⚠️</div><h1>REMOVING VIRUS...</h1><div class="bar"><div class="fill" id="fill"></div></div><div class="pct" id="pct">0%</div></div>
+<div class="card hide" id="failed"><div class="icon">🚨</div><h1 class="red">REMOVAL FAILED<br>YOU HAVE A VIRUS</h1></div>
+<div class="card hide" id="safe"><div class="icon">😂</div><h1>THERE WAS NO VIRUS</h1><p>Your device is completely safe. Nothing was downloaded or changed.</p></div>
+<script>
+let ctx,osc,gain,timer;
+function show(id){document.querySelectorAll(".card").forEach(x=>x.classList.add("hide"));document.getElementById(id).classList.remove("hide")}
+function alarm(){ctx=new(window.AudioContext||window.webkitAudioContext)();gain=ctx.createGain();gain.gain.value=.055;gain.connect(ctx.destination);osc=ctx.createOscillator();osc.type="sawtooth";osc.frequency.value=520;osc.connect(gain);osc.start();let high=false;timer=setInterval(()=>{high=!high;osc.frequency.exponentialRampToValueAtTime(high?1050:520,ctx.currentTime+.28)},320);body.classList.add("flash")}
+function stopAlarm(){clearInterval(timer);if(osc){try{osc.stop()}catch(e){}}body.classList.remove("flash")}
+remove.addEventListener("click",()=>{show("removing");let p=0,t=setInterval(()=>{p=Math.min(100,p+4);fill.style.width=p+"%";pct.textContent=p+"%";if(p===100){clearInterval(t);setTimeout(()=>{show("failed");alarm();setTimeout(()=>{stopAlarm();show("safe")},2500)},350)}},90)});
+</script></body></html>
