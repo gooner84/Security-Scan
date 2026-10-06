@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>System Error</title>
+<style>
+*{box-sizing:border-box}body{margin:0;height:100vh;background:#050505;color:#ddd;font-family:"Courier New",monospace;padding:8px 8px 92px;overflow:hidden}#desk{width:100%;min-height:calc(100vh - 94px);margin:0;display:flex;flex-direction:column;justify-content:center}.window{background:#c7c7c7;color:#111;border:2px solid #eee;border-right-color:#444;border-bottom-color:#444;width:100%;min-height:0;height:100%;display:flex;flex-direction:column}.title{background:#7b0000;color:#fff;padding:10px 12px;font:bold 13px Arial;display:flex;justify-content:space-between}.content{padding:18px 14px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}.x{background:#c7c7c7;color:#111;padding:0 5px;border:1px outset #fff}h1{font:800 27px Arial;margin:8px 0 10px;color:#a40000}.big{font-size:30px!important}p{font:14px Arial;line-height:1.45}.warn{font-size:58px}button{width:100%;font:bold 15px Arial;padding:12px 16px;background:#d5d5d5;border:2px outset white;margin-top:12px;min-height:44px}.hide{display:none!important}.console{width:100%;min-height:calc(100vh - 94px);background:#000;border:1px solid #555;padding:20px 14px 90px;color:#35e65a;white-space:pre-line;font-size:12px;line-height:1.65;position:relative}.console::after{content:"▌";color:#35e65a;animation:blink .55s steps(1) infinite}@keyframes blink{50%{opacity:0}}.console.bump{animation:bump .18s ease}@keyframes bump{0%{transform:translateY(3px);opacity:.65}100%{transform:none;opacity:1}}.glitch{animation:g .09s 12}@keyframes g{25%{transform:translate(5px,-2px)}75%{transform:translate(-5px,2px)}}body.red{animation:r .22s infinite alternate}@keyframes r{to{background:#310000}}#errors{width:100%}#errors .window{min-height:46vh;margin-bottom:8px}.safe{color:#067b26!important}
+</style></head><body id="body"><main id="desk">
+<section id="start" class="window"><div class="title"><span>System Warning</span><span class="x">×</span></div><div class="content"><div class="warn">⚠️</div><h1 class="big">YOU HAVE A VIRUS</h1><p>A critical simulated system error has been detected.</p><button id="removeBtn">CLICK HERE TO REMOVE IT</button></div></section>
+<section id="terminal" class="hide"><div class="console" id="consoleBox"><div style="font:800 24px Arial;color:#eee;margin-bottom:18px">SCANNING FOR THREAT...</div><div id="scanFile" style="color:#aaa;font:14px Arial;min-height:40px">Preparing scanner...</div><div style="height:16px;background:#252b32;border:1px solid #555;margin:18px 0 10px"><div id="scanFill" style="height:100%;width:0;background:#d52e27;transition:width .1s"></div></div><div id="scanPct" style="font:bold 30px Arial;color:#ff4540">0%</div><div id="scanWarn" style="font:bold 14px Arial;color:#ff4540;margin-top:14px;min-height:20px"></div></div></section>
+<section id="errors" class="hide"><div class="window"><div class="title"><span>CRITICAL ERROR</span><span class="x">×</span></div><div class="content"><h1>FILES APPEAR CORRUPTED</h1><p>Fake corruption simulation active.</p><button id="repairBtn">ATTEMPT SYSTEM REPAIR</button></div></div><div class="window"><div class="title"><span>ERROR</span><span class="x">×</span></div><div class="content"><h1>REMOVAL FAILED</h1><p>Threat process could not be stopped.</p></div></div></section>
+<section id="repairing" class="hide"><div class="console" id="repairBox"><div style="font:800 24px Arial;color:#eee;margin-bottom:18px">SYSTEM REPAIR</div><div id="repairFile" style="color:#aaa;font:14px Arial;min-height:40px">Preparing recovery...</div><div style="height:16px;background:#252b32;border:1px solid #555;margin:18px 0 10px"><div id="repairFill" style="height:100%;width:0;background:#d52e27;transition:width .1s"></div></div><div id="repairPct" style="font:bold 30px Arial;color:#ff4540">0%</div><div id="repairWarn" style="font:bold 14px Arial;color:#ff4540;margin-top:14px;min-height:20px"></div></div></section>
+<section id="finalWarning" class="window hide"><div class="title"><span>FATAL SECURITY ERROR</span><span class="x">×</span></div><div class="content"><div class="warn">🚨</div><h1 class="big">YOU STILL HAVE A VIRUS</h1><p>Automatic recovery failed.</p><button id="emergencyBtn">EMERGENCY RESET</button></div></section>
+<section id="safe" class="window hide"><div class="title" style="background:#17652b"><span>System Status</span><span class="x">×</span></div><div class="content"><div class="warn">😂</div><h1 class="safe">THERE WAS NO VIRUS</h1><p>Your device is completely safe. Everything you saw was a harmless webpage simulation. No files were read, corrupted, downloaded, deleted, or changed.</p></div></section>
+</main><script>
+(function(){
+const ids=["start","terminal","errors","repairing","finalWarning","safe"];
+const byId=id=>document.getElementById(id);
+function show(id){ids.forEach(x=>byId(x).classList.add("hide"));byId(id).classList.remove("hide")}
+function addLine(box,text){box.textContent+="\n"+text;box.classList.remove("bump");void box.offsetWidth;box.classList.add("bump");window.scrollTo(0,document.body.scrollHeight)}
+let audio=null,osc=null,gain=null,siren=null;
+function prep(){const A=window.AudioContext||window.webkitAudioContext;if(!audio&&A)audio=new A();if(audio&&audio.state==="suspended")audio.resume()}
+function alarm(){if(!audio)return;stopAlarm();gain=audio.createGain();gain.gain.value=.04;gain.connect(audio.destination);osc=audio.createOscillator();osc.type="square";osc.connect(gain);osc.start();let hi=false;siren=setInterval(()=>{hi=!hi;osc.frequency.setValueAtTime(hi?1250:430,audio.currentTime)},190);byId("body").classList.add("red")}
+function stopAlarm(){clearInterval(siren);if(osc){try{osc.stop()}catch(e){}osc=null}byId("body").classList.remove("red")}
+byId("removeBtn").addEventListener("click",function(){
+ prep();show("terminal");let p=0;
+ const files=["system_core.dat","browser_cache.tmp","security_index.db","startup_service.exe","network_config.sys"];
+ const q=setInterval(function(){p=Math.min(100,p+4);byId("scanFill").style.width=p+"%";byId("scanPct").textContent=p+"%";byId("scanFile").textContent="Checking: "+files[Math.min(files.length-1,Math.floor(p/21))];if(p>55)byId("scanWarn").textContent="⚠ Suspicious activity detected";if(p===100){clearInterval(q);setTimeout(function(){show("errors");byId("desk").classList.add("glitch");alarm()},500)}},90);
+});
+byId("repairBtn").addEventListener("click",function(){
+ stopAlarm();byId("desk").classList.remove("glitch");show("repairing");let p=0;
+ const msgs=["Restoring security settings...","Repairing file index...","Checking recovery data...","Verifying system state..."];
+ const q=setInterval(function(){p=Math.min(100,p+4);byId("repairFill").style.width=p+"%";byId("repairPct").textContent=p+"%";byId("repairFile").textContent=msgs[Math.min(msgs.length-1,Math.floor(p/26))];if(p>72)byId("repairWarn").textContent="⚠ Recovery becoming unstable";if(p===100){clearInterval(q);byId("repairWarn").textContent="ERROR: REPAIR FAILED";setTimeout(function(){show("finalWarning");alarm()},650)}},100);
+});
+byId("emergencyBtn").addEventListener("click",function(){
+ stopAlarm();show("repairing");byId("repairFile").textContent="Running emergency reset...";byId("repairFill").style.width="100%";byId("repairPct").textContent="100%";byId("repairWarn").textContent="Verifying security status...";setTimeout(function(){show("safe")},1800);
+});
+})();
+</script></body></html><style>
+#errors{height:100%;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+#errors.hide{display:none!important}
+#errors .window{height:auto!important;min-height:0!important;flex:1;margin:0}
+#errors .content{padding:10px 12px}
+#errors h1{font-size:21px;margin:4px 0 6px}
+#errors p{margin:2px 0;font-size:12px}
+#errors button{margin-top:7px;min-height:40px;padding:8px}
+@media(max-width:500px){body{padding-bottom:98px}#desk{height:calc(100vh - 106px)}}
+</style>
